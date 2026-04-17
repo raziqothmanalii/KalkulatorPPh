@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -128,7 +127,7 @@
     </style>
 </head>
 <body>
-
+    
     <div id="readmeOverlay">
         <div class="readme-content">
             <h2>📖 Panduan Penggunaan</h2>
