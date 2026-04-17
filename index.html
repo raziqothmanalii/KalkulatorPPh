@@ -30,7 +30,6 @@
             display: flex; align-items: center; justify-content: center;
         }
 
-        /* OVERLAY MODAL */
         .overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.9); backdrop-filter: blur(15px);
@@ -57,7 +56,6 @@
             border: none; border-radius: 100px; font-weight: 600; cursor: pointer;
         }
 
-        /* CONTAINER */
         .container {
             background: var(--card-color); padding: 30px; border-radius: 32px;
             width: 92%; max-width: 440px; max-height: 90vh;
@@ -92,7 +90,6 @@
             width: 16px; height: 16px; background: #3c4043; color: #fff;
             border-radius: 50%; font-size: 10px; margin-left: 8px;
             display: flex; align-items: center; justify-content: center; cursor: pointer;
-            transition: 0.2s;
         }
 
         input {
@@ -107,7 +104,6 @@
             font-size: 14px; font-weight: 700; cursor: pointer; margin-top: 5px;
         }
 
-        /* HASIL */
         .results { margin-top: 25px; display: none; animation: slideUp 0.4s ease-out; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -127,16 +123,15 @@
     <div id="guide" class="overlay">
         <div class="modal">
             <h2>Selamat Datang di Kalkulator Pajak by Adien!</h2>
-            <p>Senang sekali bisa membantu Anda! Ini adalah kalkulator PPh 21 sederhana yang saya rancang untuk memberikan perhitungan pajak penghasilan yang transparan dan presisi sesuai aturan tarif progresif terbaru. Karena aplikasi ini masih dalam tahap pengembangan awal, dukungan Anda sangat berarti bagi saya. Jika Anda menemukan kesalahan perhitungan, bug, atau memiliki saran untuk perbaikan, jangan ragu untuk menghubungi saya melalui:
-📧 raziqothmanalii@gmail.com</p>
+            <p>Aplikasi ini dirancang untuk menghitung estimasi PPh 21 Anda secara akurat dengan sistem tarif progresif. Jika Anda menemukan bug atau error, silakan hubungi saya di: <b>raziqothmanalii@gmail.com</b></p>
             <button class="btn-prime" onclick="closeM('guide')">Mulai</button>
         </div>
     </div>
 
     <div id="info" class="overlay" style="display: none; opacity: 0;">
         <div class="modal">
-            <h2 style="text-align: left;">Tanggungan</h2>
-            <p>Tanggungan adalah keluarga (pasangan, anak, orang tua) yang menjadi tanggung jawab finansial Anda. Maksimal 3 orang untuk PTKP.</p>
+            <h2 style="text-align: left;">Tentang Tanggungan</h2>
+            <p>Tanggungan mencakup anggota keluarga sedarah yang menjadi tanggung jawab finansial Anda dan <b>tidak memiliki penghasilan sendiri</b> (seperti pasangan, anak, atau orang tua). Setiap jumlah tanggungan akan dikalikan dengan Rp 4.500.000 untuk menambah batas PTKP Anda.</p>
             <button class="btn-prime" onclick="closeM('info')">Tutup</button>
         </div>
     </div>
@@ -157,14 +152,14 @@
                     <label>Jumlah Tanggungan</label>
                     <div class="hint" onclick="openM('info')">?</div>
                 </div>
-                <input type="number" id="tanggungan" min="0" value="0">
+                <input type="number" id="tanggungan" value="0">
             </div>
 
             <button class="btn-calc" onclick="calc()">HITUNG LAPISAN</button>
 
             <div id="resArea" class="results">
                 <div class="summary-card">
-                    <span style="font-size: 10px; color: var(--text-dim); text-transform: uppercase;">Pajak Tahunan</span>
+                    <span style="font-size: 10px; color: var(--text-dim); text-transform: uppercase;">Pajak Tahunan Terutang</span>
                     <div class="total-val" id="resTahun"></div>
                     <div class="sub-val">± <span id="resBulan"></span> / Bulan</div>
                 </div>
@@ -180,13 +175,7 @@
     </div>
 
     <script>
-        // MENDENGARKAN TOMBOL ENTER DI SELURUH HALAMAN
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Enter') {
-                event.preventDefault(); // Mencegah reload halaman
-                calc();
-            }
-        });
+        document.addEventListener('keydown', function(e) { if (e.key === 'Enter') calc(); });
 
         function openM(id) {
             const e = document.getElementById(id);
@@ -222,6 +211,7 @@
             isl.innerText = "CALCULATING...";
 
             setTimeout(() => {
+                // Perhitungan PTKP Tanpa Batasan (Cap)
                 const ptkp = 54000000 + (tang * 4500000);
                 let pkpSisa = Math.max(0, gaji - ptkp);
                 const pkpTotal = pkpSisa;
