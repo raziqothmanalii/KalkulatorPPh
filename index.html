@@ -29,7 +29,6 @@
             overflow: hidden;
         }
 
-        /* HEADER */
         header {
             padding: 24px 24px;
             display: flex;
@@ -59,7 +58,6 @@
             margin-top: 2px;
         }
 
-        /* DYNAMIC ISLAND */
         .island-container {
             position: absolute;
             left: 50%;
@@ -85,12 +83,10 @@
 
         .island-active { width: 200px; height: 38px; border-color: var(--accent-blue); background: #1c1c1e; }
 
-        /* OVERLAYS & MODALS */
         .overlay {
             position: fixed; inset: 0;
             background: rgba(0, 0, 0, 0.9); backdrop-filter: blur(15px);
             z-index: 9999; display: flex; align-items: center; justify-content: center;
-            transition: opacity 0.3s ease;
         }
 
         .modal {
@@ -113,7 +109,6 @@
             font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
-        /* MAIN UI */
         main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px; }
 
         .container {
@@ -150,7 +145,6 @@
             cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
-        /* RESULTS */
         .results { margin-top: 30px; display: none; animation: slideUp 0.5s ease-out forwards; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -230,9 +224,14 @@
         function openM(id) { document.getElementById(id).style.display = 'flex'; }
         function closeM(id) { document.getElementById(id).style.display = 'none'; }
         
+        // FUNGSI MASKING RUPIAH
         function fmtRp(el) {
             let val = el.value.replace(/\D/g, '');
-            el.value = val ? 'Rp ' + new Intl.NumberFormat('id-ID').format(val) : '';
+            if (val === '') {
+                el.value = '';
+                return;
+            }
+            el.value = 'Rp' + new Intl.NumberFormat('id-ID').format(val);
         }
 
         function calc() {
@@ -242,10 +241,9 @@
 
             setTimeout(() => {
                 document.getElementById('resArea').style.display = 'block';
-                // Placeholder hasil untuk demo
-                document.getElementById('resTahun').innerText = "Rp 1.250.000";
+                document.getElementById('resTahun').innerText = "Rp1.250.000";
                 document.getElementById('resBulan').innerText = "104.166";
-                document.getElementById('resPkp').innerText = "Rp 25.000.000";
+                document.getElementById('resPkp').innerText = "Rp25.000.000";
                 
                 isl.classList.remove('island-active');
                 isl.innerText = "HASIL SELESAI";
