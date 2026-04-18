@@ -29,7 +29,7 @@
             overflow: hidden;
         }
 
-        /* Header style dari Kalkulator Waris - TANPA MENGGANTI ISLAND */
+        /* Header style dari Kalkulator Waris */
         header {
             background: rgba(15, 23, 42, 0.8);
             backdrop-filter: blur(20px);
@@ -50,16 +50,19 @@
             line-height: 1.1;
         }
 
-        .brand-sub {
+        /* Beta Edition di kanan atas seperti Kalkulator Waris */
+        .beta-badge {
             font-size: 10px;
-            color: var(--text-dim);
             font-weight: 700;
+            color: var(--text-dim);
             text-transform: uppercase;
             letter-spacing: 1.5px;
-            margin-top: 2px;
+            border: 1px solid var(--border);
+            padding: 4px 12px;
+            border-radius: 9999px;
         }
 
-        /* Island PERMAIN tetap sama seperti aslinya */
+        /* Island warnanya disesuaikan tapi FUNGSI tetap sama */
         .island-container {
             position: absolute;
             left: 50%;
@@ -71,7 +74,7 @@
         .island {
             width: 120px;
             height: 32px;
-            background: #000000;
+            background: var(--card);
             border-radius: 100px;
             display: flex;
             align-items: center;
@@ -79,7 +82,7 @@
             color: white;
             font-size: 10px;
             font-weight: 700;
-            border: 1px solid #333;
+            border: 1px solid var(--border);
             transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1);
         }
 
@@ -87,7 +90,9 @@
             width: 200px; 
             height: 38px; 
             border-color: var(--primary); 
-            background: var(--card); 
+            background: var(--primary); 
+            color: white;
+            box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
         }
 
         .overlay {
@@ -238,6 +243,12 @@
             letter-spacing: 1px;
         }
 
+        .btn-calc:hover {
+            background: #2563eb;
+            transform: translateY(-1px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+        }
+
         .results { 
             margin-top: 30px; 
             display: none; 
@@ -294,12 +305,13 @@
     <header>
         <div class="header-left">
             <span class="brand-title">Kalkulator Pajak <span style="color:var(--primary)">by Adien</span></span>
-            <span class="brand-sub">Beta Edition</span>
         </div>
+        <!-- Beta Edition dipindah ke kanan atas seperti Kalkulator Waris -->
+        <div class="beta-badge">Beta Edition</div>
+        <!-- Island tetap di tengah -->
         <div class="island-container">
             <div class="island" id="island">SIAP HITUNG</div>
         </div>
-        <div style="width: 40px;"></div>
     </header>
 
     <main>
@@ -372,10 +384,12 @@
 
             if (gaji <= 0) {
                 isl.innerText = "CEK INPUT";
-                isl.style.background = "#ea4335";
+                isl.style.background = "#ef4444";
+                isl.style.color = "white";
                 setTimeout(() => { 
                     isl.innerText = "SIAP HITUNG"; 
-                    isl.style.background = "#000000"; 
+                    isl.style.background = "var(--card)";
+                    isl.style.color = "white";
                 }, 2000);
                 return;
             }
