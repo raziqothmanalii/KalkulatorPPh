@@ -87,6 +87,7 @@
             position: fixed; inset: 0;
             background: rgba(0, 0, 0, 0.9); backdrop-filter: blur(15px);
             z-index: 9999; display: flex; align-items: center; justify-content: center;
+            opacity: 1; transition: opacity 0.3s ease;
         }
 
         .modal {
@@ -167,7 +168,7 @@
         </div>
     </div>
 
-    <div id="info" class="overlay" style="display: none;">
+    <div id="info" class="overlay" style="display: none; opacity: 0;">
         <div class="modal">
             <h2 style="text-align: left;">Tentang Tanggungan</h2>
             <p>Tanggungan mencakup anggota keluarga sedarah yang menjadi tanggung jawab finansial Anda dan <b>tidak memiliki penghasilan sendiri</b> (seperti pasangan, anak, atau orang tua). Setiap jumlah tanggungan akan menambah batas Pendapatan Tidak Kena Pajak (PTKP) Anda.</p>
@@ -191,7 +192,8 @@
             <div class="scroll-content">
                 <div class="field">
                     <div class="label-row"><label>Penghasilan Netto / Tahun</label></div>
-                    <input type="text" id="dispGaji" placeholder="Rp 0" oninput="fmtRp(this)" onkeydown="checkEnter(event)">
+                    <input type="text" id="dispGaji" placeholder="Rp 0" oninput="fmtRp(this)">
+                    <input type="hidden" id="rawGaji" value="0">
                 </div>
 
                 <div class="field">
@@ -199,7 +201,7 @@
                         <label>Jumlah Tanggungan</label>
                         <div class="hint" onclick="openM('info')">?</div>
                     </div>
-                    <input type="number" id="tanggungan" value="0" min="0" max="3" onkeydown="checkEnter(event)">
+                    <input type="number" id="tanggungan" value="0" min="0" max="3">
                 </div>
 
                 <button class="btn-calc" onclick="calc()">HITUNG PAJAK</button>
@@ -221,84 +223,10 @@
     </main>
 
     <script>
-        function openM(id) { document.getElementById(id).style.display = 'flex'; }
-        function closeM(id) { document.getElementById(id).style.display = 'none'; }
-        
-        // Fungsi Enter
-        function checkEnter(event) {
-            if (event.key === "Enter") {
-                event.preventDefault(); // Mencegah reload halaman
-                calc();
-            }
-        }
-
-        function fmtRp(el) {
-            let val = el.value.replace(/\D/g, '');
-            if (val === '') {
-                el.value = '';
-                return;
-            }
-            let formatted = new Intl.NumberFormat('id-ID').format(val);
-            el.value = 'Rp' + formatted;
-        }
-
-        function calc() {
-            const isl = document.getElementById('island');
-            isl.classList.add('island-active');
-            isl.innerText = "MENGHITUNG...";
-
-            setTimeout(() => {
-                document.getElementById('resArea').style.display = 'block';
-                // Simulasi hasil hitung
-                document.getElementById('resTahun').innerText = "Rp1.250.000";
-                document.getElementById('resBulan').innerText = "104.166";
-                document.getElementById('resPkp').innerText = "Rp25.000.000";
-                
-                isl.classList.remove('island-active');
-                isl.innerText = "HASIL SELESAI";
-                
-                // Scroll otomatis ke hasil (untuk mobile)
-                document.getElementById('resArea').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            }, 800);
-        }
-    </script>
-</body>
-</html>
-
-    <script>
-        function openM(id) { document.getElementById(id).style.display = 'flex'; }
-        function closeM(id) { document.getElementById(id).style.display = 'none'; }
-        
-        // FUNGSI MASKING RUPIAH
-        function fmtRp(el) {
-            let val = el.value.replace(/\D/g, '');
-            if (val === '') {
-                el.value = '';
-                return;
-            }
-            el.value = 'Rp' + new Intl.NumberFormat('id-ID').format(val);
-        }
-
-        function calc() {
-            const isl = document.getElementById('island');
-            isl.classList.add('island-active');
-            isl.innerText = "MENGHITUNG...";
-
-            setTimeout(() => {
-                document.getElementById('resArea').style.display = 'block';
-                document.getElementById('resTahun').innerText = "Rp1.250.000";
-                document.getElementById('resBulan').innerText = "104.166";
-                document.getElementById('resPkp').innerText = "Rp25.000.000";
-                
-                isl.classList.remove('island-active');
-                isl.innerText = "HASIL SELESAI";
-            }, 800);
-        }
-    </script>
-</body>
-
-    <script>
-        document.addEventListener('keydown', function(e) { if (e.key === 'Enter') calc(); });
+        // Global listener untuk Enter
+        document.addEventListener('keydown', function(e) { 
+            if (e.key === 'Enter') calc(); 
+        });
 
         function openM(id) {
             const e = document.getElementById(id);
@@ -313,9 +241,13 @@
         }
 
         function fmtRp(e) {
-            let v = e.value.replace(/[^,\d]/g, '');
+            let v = e.value.replace(/\D/g, '');
             document.getElementById('rawGaji').value = v;
-            if (v) e.value = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(v);
+            if (v) {
+                e.value = 'Rp' + new Intl.NumberFormat('id-ID').format(v);
+            } else {
+                e.value = '';
+            }
         }
 
         function calc() {
@@ -326,7 +258,10 @@
             if (gaji <= 0) {
                 isl.innerText = "CEK INPUT";
                 isl.style.background = "#ea4335";
-                setTimeout(() => { isl.innerText = "PERHITUNGAN SELESAI"; isl.style.background = "#2f2f30"; }, 2000);
+                setTimeout(() => { 
+                    isl.innerText = "SIAP HITUNG"; 
+                    isl.style.background = "var(--island)"; 
+                }, 2000);
                 return;
             }
 
@@ -334,7 +269,7 @@
             isl.innerText = "CALCULATING...";
 
             setTimeout(() => {
-                // Perhitungan PTKP Tanpa Batasan (Cap)
+                // Perhitungan PTKP
                 const ptkp = 54000000 + (tang * 4500000);
                 let pkpSisa = Math.max(0, gaji - ptkp);
                 const pkpTotal = pkpSisa;
@@ -367,7 +302,10 @@
                 document.getElementById('resBulan').innerText = f(totalPajak/12);
 
                 isl.innerText = "DONE ✨";
-                setTimeout(() => { isl.classList.remove('island-active'); isl.innerText = "PERHITUNGAN SELESAI"; }, 1500);
+                setTimeout(() => { 
+                    isl.classList.remove('island-active'); 
+                    isl.innerText = "SIAP HITUNG"; 
+                }, 1500);
                 
                 document.querySelector('.scroll-content').scrollTo({ top: 400, behavior: 'smooth' });
             }, 500);
