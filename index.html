@@ -7,36 +7,37 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #000000;
-            --card-color: #1c1c1e;
-            --accent-blue: #007aff;
-            --accent-purple: #af52de;
-            --text-main: #ffffff;
-            --text-dim: #8e8e93;
-            --border: #38383a;
-            --island: #000000;
+            /* Warna dari Kalkulator Waris */
+            --primary: #3b82f6;
+            --bg: #0f172a;
+            --card: #1e293b;
+            --text: #f1f5f9;
+            --border: #334155;
+            --text-dim: #94a3b8;
+            --input-bg: #0f172a;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
         
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
+            background-color: var(--bg);
+            color: var(--text);
             height: 100vh;
             display: flex;
             flex-direction: column;
             overflow: hidden;
         }
 
+        /* Header style dari Kalkulator Waris - TANPA MENGGANTI ISLAND */
         header {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
             padding: 24px 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(0,0,0,0.8);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border);
             position: sticky;
             top: 0;
             z-index: 100;
@@ -58,6 +59,7 @@
             margin-top: 2px;
         }
 
+        /* Island PERMAIN tetap sama seperti aslinya */
         .island-container {
             position: absolute;
             left: 50%;
@@ -69,7 +71,7 @@
         .island {
             width: 120px;
             height: 32px;
-            background: var(--island);
+            background: #000000;
             border-radius: 100px;
             display: flex;
             align-items: center;
@@ -81,81 +83,194 @@
             transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1);
         }
 
-        .island-active { width: 200px; height: 38px; border-color: var(--accent-blue); background: #1c1c1e; }
+        .island-active { 
+            width: 200px; 
+            height: 38px; 
+            border-color: var(--primary); 
+            background: var(--card); 
+        }
 
         .overlay {
             position: fixed; inset: 0;
-            background: rgba(0, 0, 0, 0.9); backdrop-filter: blur(15px);
-            z-index: 9999; display: flex; align-items: center; justify-content: center;
-            opacity: 1; transition: opacity 0.3s ease;
+            background: rgba(2, 6, 23, 0.95); 
+            backdrop-filter: blur(20px);
+            z-index: 9999; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            opacity: 1; 
+            transition: opacity 0.3s ease;
         }
 
         .modal {
-            background: var(--card-color); padding: 30px; border-radius: 32px;
-            max-width: 400px; width: 85%; border: 1px solid var(--border);
-            box-shadow: 0 25px 50px rgba(0,0,0,0.5); text-align: center;
+            background: var(--card); 
+            padding: 30px; 
+            border-radius: 32px;
+            max-width: 400px; 
+            width: 85%; 
+            border: 1px solid var(--border);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5); 
+            text-align: center;
         }
 
         .modal h2 {
-            font-size: 20px; margin-bottom: 12px; font-weight: 700;
-            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            font-size: 20px; 
+            margin-bottom: 12px; 
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--primary), #af52de);
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent;
         }
 
-        .modal p { color: var(--text-dim); line-height: 1.6; font-size: 14px; margin-bottom: 24px; text-align: left; }
+        .modal p { 
+            color: var(--text-dim); 
+            line-height: 1.6; 
+            font-size: 14px; 
+            margin-bottom: 24px; 
+            text-align: left; 
+        }
 
         .btn-prime {
-            width: 100%; padding: 16px; background: #ffffff; color: #000000;
-            border: none; border-radius: 100px; font-weight: 700; cursor: pointer;
+            width: 100%; 
+            padding: 16px; 
+            background: var(--primary); 
+            color: white;
+            border: none; 
+            border-radius: 16px; 
+            font-weight: 800; 
+            cursor: pointer;
             font-family: 'Plus Jakarta Sans', sans-serif;
+            transition: 0.3s;
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 12px;
         }
 
-        main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        main { 
+            flex: 1; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            padding: 20px; 
+        }
 
         .container {
-            background: var(--card-color); padding: 32px; border-radius: 40px;
-            width: 100%; max-width: 440px; max-height: 85vh;
-            border: 1px solid var(--border); display: flex; flex-direction: column;
+            background: var(--card); 
+            padding: 32px; 
+            border-radius: 24px;
+            width: 100%; 
+            max-width: 440px; 
+            max-height: 85vh;
+            border: 1px solid var(--border);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.5);
+            display: flex; 
+            flex-direction: column;
         }
 
-        .scroll-content { overflow-y: auto; padding-right: 4px; }
+        .scroll-content { 
+            overflow-y: auto; 
+            padding-right: 4px; 
+        }
         .scroll-content::-webkit-scrollbar { width: 3px; }
 
         .field { margin-bottom: 24px; }
         .label-row { display: flex; align-items: center; margin-bottom: 10px; }
-        label { font-size: 11px; color: var(--text-dim); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        label { 
+            font-size: 11px; 
+            color: var(--text-dim); 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+        }
 
         .hint {
-            width: 18px; height: 18px; background: #3c4043; color: #fff;
-            border-radius: 50%; font-size: 10px; margin-left: 8px;
-            display: flex; align-items: center; justify-content: center; cursor: pointer;
+            width: 18px; 
+            height: 18px; 
+            background: #334155; 
+            color: #fff;
+            border-radius: 50%; 
+            font-size: 10px; 
+            margin-left: 8px;
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            cursor: pointer;
             font-weight: 800;
         }
 
         input {
-            width: 100%; padding: 16px; background: #2c2c2e; border: 1px solid transparent;
-            border-radius: 16px; font-size: 18px; font-weight: 600; color: white;
-            outline: none; font-family: 'Plus Jakarta Sans', sans-serif;
+            width: 100%; 
+            padding: 16px; 
+            background: var(--input-bg); 
+            border: 2px solid var(--border);
+            border-radius: 12px; 
+            font-size: 18px; 
+            font-weight: 600; 
+            color: white;
+            outline: none; 
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            transition: 0.2s;
         }
 
-        input:focus { border-color: var(--accent-blue); background: #000; }
+        input:focus { 
+            border-color: var(--primary); 
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+            background: var(--bg);
+        }
 
         .btn-calc {
-            width: 100%; padding: 18px; background: var(--text-main); color: #000;
-            border: none; border-radius: 100px; font-size: 14px; font-weight: 800;
-            cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif;
+            width: 100%; 
+            padding: 18px; 
+            background: var(--primary); 
+            color: white;
+            border: none; 
+            border-radius: 16px; 
+            font-size: 14px; 
+            font-weight: 800;
+            cursor: pointer; 
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .results { margin-top: 30px; display: none; animation: slideUp 0.5s ease-out forwards; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .results { 
+            margin-top: 30px; 
+            display: none; 
+            animation: slideUp 0.5s ease-out forwards; 
+        }
+        @keyframes slideUp { 
+            from { opacity: 0; transform: translateY(20px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
 
         .summary-card {
-            background: rgba(255,255,255,0.03); padding: 24px; border-radius: 24px;
-            border: 1px solid var(--border); margin-bottom: 20px; text-align: center;
+            background: rgba(45, 55, 72, 0.8); 
+            padding: 24px; 
+            border-radius: 24px;
+            border: 1px solid var(--border); 
+            margin-bottom: 20px; 
+            text-align: center;
         }
 
-        .total-val { font-size: 32px; font-weight: 800; letter-spacing: -1px; margin: 8px 0; }
-        .row { display: flex; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid #2c2c2e; font-size: 13px; }
+        .total-val { 
+            font-size: 32px; 
+            font-weight: 800; 
+            letter-spacing: -1px; 
+            margin: 8px 0; 
+            color: var(--text);
+        }
+        .row { 
+            display: flex; 
+            justify-content: space-between; 
+            padding: 14px 0; 
+            border-bottom: 1px solid #334155; 
+            font-size: 13px; 
+        }
     </style>
 </head>
 <body>
@@ -178,7 +293,7 @@
 
     <header>
         <div class="header-left">
-            <span class="brand-title">Kalkulator Pajak <span style="color:var(--accent-blue)">by Adien</span></span>
+            <span class="brand-title">Kalkulator Pajak <span style="color:var(--primary)">by Adien</span></span>
             <span class="brand-sub">Beta Edition</span>
         </div>
         <div class="island-container">
@@ -210,12 +325,12 @@
                     <div class="summary-card">
                         <span style="font-size: 11px; color: var(--text-dim); font-weight: 700; text-transform: uppercase;">Pajak Tahunan Terutang</span>
                         <div class="total-val" id="resTahun">Rp 0</div>
-                        <div style="color: var(--accent-blue); font-size: 13px; font-weight: 600;">± <span id="resBulan"></span> / bulan</div>
+                        <div style="color: var(--primary); font-size: 13px; font-weight: 600;">± <span id="resBulan"></span> / bulan</div>
                     </div>
                     <div id="tiers"></div>
                     <div class="row" style="border: none; margin-top: 10px;">
                         <span style="color: var(--text-dim);">PKP Akhir</span>
-                        <span id="resPkp" style="font-weight: 700; color: var(--accent-purple);"></span>
+                        <span id="resPkp" style="font-weight: 700; color: #af52de;"></span>
                     </div>
                 </div>
             </div>
@@ -260,7 +375,7 @@
                 isl.style.background = "#ea4335";
                 setTimeout(() => { 
                     isl.innerText = "SIAP HITUNG"; 
-                    isl.style.background = "var(--island)"; 
+                    isl.style.background = "#000000"; 
                 }, 2000);
                 return;
             }
