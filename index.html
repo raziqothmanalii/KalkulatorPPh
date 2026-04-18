@@ -191,7 +191,7 @@
             <div class="scroll-content">
                 <div class="field">
                     <div class="label-row"><label>Penghasilan Netto / Tahun</label></div>
-                    <input type="text" id="dispGaji" placeholder="Rp 0" oninput="fmtRp(this)">
+                    <input type="text" id="dispGaji" placeholder="Rp 0" oninput="fmtRp(this)" onkeydown="checkEnter(event)">
                 </div>
 
                 <div class="field">
@@ -199,7 +199,7 @@
                         <label>Jumlah Tanggungan</label>
                         <div class="hint" onclick="openM('info')">?</div>
                     </div>
-                    <input type="number" id="tanggungan" value="0" min="0" max="3">
+                    <input type="number" id="tanggungan" value="0" min="0" max="3" onkeydown="checkEnter(event)">
                 </div>
 
                 <button class="btn-calc" onclick="calc()">HITUNG PAJAK</button>
@@ -219,6 +219,51 @@
             </div>
         </div>
     </main>
+
+    <script>
+        function openM(id) { document.getElementById(id).style.display = 'flex'; }
+        function closeM(id) { document.getElementById(id).style.display = 'none'; }
+        
+        // Fungsi Enter
+        function checkEnter(event) {
+            if (event.key === "Enter") {
+                event.preventDefault(); // Mencegah reload halaman
+                calc();
+            }
+        }
+
+        function fmtRp(el) {
+            let val = el.value.replace(/\D/g, '');
+            if (val === '') {
+                el.value = '';
+                return;
+            }
+            let formatted = new Intl.NumberFormat('id-ID').format(val);
+            el.value = 'Rp' + formatted;
+        }
+
+        function calc() {
+            const isl = document.getElementById('island');
+            isl.classList.add('island-active');
+            isl.innerText = "MENGHITUNG...";
+
+            setTimeout(() => {
+                document.getElementById('resArea').style.display = 'block';
+                // Simulasi hasil hitung
+                document.getElementById('resTahun').innerText = "Rp1.250.000";
+                document.getElementById('resBulan').innerText = "104.166";
+                document.getElementById('resPkp').innerText = "Rp25.000.000";
+                
+                isl.classList.remove('island-active');
+                isl.innerText = "HASIL SELESAI";
+                
+                // Scroll otomatis ke hasil (untuk mobile)
+                document.getElementById('resArea').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 800);
+        }
+    </script>
+</body>
+</html>
 
     <script>
         function openM(id) { document.getElementById(id).style.display = 'flex'; }
