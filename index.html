@@ -1,333 +1,230 @@
 <!DOCTYPE html>
 <html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Kalkulator PPh by Adien</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            /* Warna dari Kalkulator Waris */
-            --primary: #3b82f6;
-            --bg: #0f172a;
-            --card: #1e293b;
-            --text: #f1f5f9;
-            --border: #334155;
-            --text-dim: #94a3b8;
-            --input-bg: #0f172a;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
-        
-        .body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            /* overflow: hidden; ← HAPUS INI */
-            overflow-y: auto; /* GANTI JADI INI */
-            -webkit-overflow-scrolling: touch; /* Smooth scroll iOS */
-         }
-
-        /* Header style dari Kalkulator Waris */
-        header {
-            background: rgba(15, 23, 42, 0.95);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border);
-            padding: 16px 20px;
-            display: flex;
-            justify-content: space-between; /* Ini bikin 3 elemen */
-            align-items: center;
-            position: relative;
-            z-index: 100;
-            flex-shrink: 0;
-            gap: 12px;
-        }
-        .header-left {
-            flex: 1
-
-        .brand-title {
-            font-size: 20px;
-            font-weight: 800;
-            letter-spacing: -1px;
-            line-height: 1.1;
-        }
-
-        /* Beta Edition di kanan atas seperti Kalkulator Waris */
-        .beta-badge {
-            font-size: 10px;
-            font-weight: 700;
-            color: var(--text-dim);
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            border: 1px solid var(--border);
-            padding: 4px 12px;
-            border-radius: 9999px;
-            flex-shrink: 0; /* Jangan shrink */
-            order: 3; /* Kanan */
-            white-space: nowrap;
-        }
-
-        /* Island warnanya disesuaikan tapi FUNGSI tetap sama */
-        .island-container {
-            position: relative; /* GANTI dari absolute */
-            margin: 0 auto;
-            margin-top: 8px;
-            z-index: 200;
-            flex-shrink: 0; /* Jangan shrink */
-            order: 2; /* Tengah */
-        }
-
-        .island {
-            width: 120px;
-            height: 32px;
-            background: var(--card);
-            border-radius: 100px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 10px;
-            font-weight: 700;
-            border: 1px solid var(--border);
-            transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1);
-        }
-
-        .island-active { 
-            width: 200px; 
-            height: 38px; 
-            border-color: var(--primary); 
-            background: var(--primary); 
-            color: white;
-            box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
-        }
-
-        .overlay {
-            position: fixed; inset: 0;
-            background: rgba(2, 6, 23, 0.95); 
-            backdrop-filter: blur(20px);
-            z-index: 9999; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center;
-            opacity: 1; 
-            transition: opacity 0.3s ease;
-        }
-
-        .modal {
-            background: var(--card); 
-            padding: 30px; 
-            border-radius: 32px;
-            max-width: 400px; 
-            width: 85%; 
-            border: 1px solid var(--border);
-            box-shadow: 0 25px 50px rgba(0,0,0,0.5); 
-            text-align: center;
-        }
-
-        .modal h2 {
-            font-size: 20px; 
-            margin-bottom: 12px; 
-            font-weight: 700;
-            background: linear-gradient(90deg, var(--primary), #af52de);
-            -webkit-background-clip: text; 
-            -webkit-text-fill-color: transparent;
-        }
-
-        .modal p { 
-            color: var(--text-dim); 
-            line-height: 1.6; 
-            font-size: 14px; 
-            margin-bottom: 24px; 
-            text-align: left; 
-        }
-
-        .btn-prime {
-            width: 100%; 
-            padding: 16px; 
-            background: var(--primary); 
-            color: white;
-            border: none; 
-            border-radius: 16px; 
-            font-weight: 800; 
-            cursor: pointer;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            transition: 0.3s;
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            gap: 8px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-size: 12px;
-        }
-
-        main { 
-            flex: 1; 
-            display: flex; 
-            align-items: flex-start; /* GANTI dari center */
-            justify-content: center; 
-            padding: 16px; /* Kurangi padding */
-            min-height: calc(100vh - 140px); /* Minimal height */
-        }
-
-        .container {
-            background: var(--card); 
-            padding: 24px; /* Kurangi dari 32px */
-            border-radius: 20px; /* Kurangi radius */
-            width: 100%; 
-            max-width: 400px; /* Kurangi dari 440px */
-            max-height: none; /* HAPUS fixed height */
-            border: 1px solid var(--border);
-            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.5);
-            display: flex; 
-            flex-direction: column;
-            height: 100%;
-        }
-
-        .scroll-content { 
-            overflow-y: auto; 
-            padding-right: 4px; 
-        }
-        .scroll-content::-webkit-scrollbar { width: 3px; }
-
-        .field { margin-bottom: 24px; }
-        .label-row { display: flex; align-items: center; margin-bottom: 10px; }
-        label { 
-            font-size: 11px; 
-            color: var(--text-dim); 
-            font-weight: 700; 
-            text-transform: uppercase; 
-            letter-spacing: 1px; 
-        }
-
-        .hint {
-            width: 18px; 
-            height: 18px; 
-            background: #334155; 
-            color: #fff;
-            border-radius: 50%; 
-            font-size: 10px; 
-            margin-left: 8px;
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            cursor: pointer;
-            font-weight: 800;
-        }
-
-        input {
-            width: 100%; 
-            padding: 16px; 
-            background: var(--input-bg); 
-            border: 2px solid var(--border);
-            border-radius: 12px; 
-            font-size: 18px; 
-            font-weight: 600; 
-            color: white;
-            outline: none; 
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            transition: 0.2s;
-        }
-
-        input:focus { 
-            border-color: var(--primary); 
-            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
-            background: var(--bg);
-        }
-
-        .btn-calc {
-            width: 100%; 
-            padding: 18px; 
-            background: var(--primary); 
-            color: white;
-            border: none; 
-            border-radius: 16px; 
-            font-size: 14px; 
-            font-weight: 800;
-            cursor: pointer; 
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            transition: 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .btn-calc:hover {
-            background: #2563eb;
-            transform: translateY(-1px);
-            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
-        }
-
-        .results { 
-            margin-top: 30px; 
-            display: none; 
-            animation: slideUp 0.5s ease-out forwards; 
-        }
-        @media screen and (max-height: 700px) {
-        header {
-            padding: 12px 16px;
-        }
-        
-        .container {
-            padding: 20px 16px;
-            margin: 8px;
-        }
-        
-        .field { 
-            margin-bottom: 20px; 
-        }
-        
-        input {
-            padding: 14px;
-            font-size: 16px; /* Pastikan keyboard trigger */
-        }
-        
-        .btn-calc {
-            padding: 16px;
-        }
-        .scroll-content { 
-            overflow-y: auto; 
-            padding-right: 4px; 
-            flex: 1;
-            -webkit-overflow-scrolling: touch;
-        }
-        .scroll-content::-webkit-scrollbar { 
-            width: 4px; 
-        }
-        .scroll-content::-webkit-scrollbar-thumb {
-            background: var(--primary);
-            border-radius: 10px;
-        }
-        @keyframes slideUp { 
-            from { opacity: 0; transform: translateY(20px); } 
-            to { opacity: 1; transform: translateY(0); } 
-        }
-
-        .summary-card {
-            background: rgba(45, 55, 72, 0.8); 
-            padding: 24px; 
-            border-radius: 24px;
-            border: 1px solid var(--border); 
-            margin-bottom: 20px; 
-            text-align: center;
-        }
-
-        .total-val { 
-            font-size: 32px; 
-            font-weight: 800; 
-            letter-spacing: -1px; 
-            margin: 8px 0; 
-            color: var(--text);
-        }
-        .row { 
-            display: flex; 
-            justify-content: space-between; 
-            padding: 14px 0; 
-            border-bottom: 1px solid #334155; 
-            font-size: 13px; 
-        }
+</style>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+        <title>Kalkulator PPh by Adien</title>
+        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+        <style>
+            :root {
+        --primary: #3b82f6;
+        --bg: #0f172a;
+        --card: #1e293b;
+        --text: #f1f5f9;
+        --border: #334155;
+        --text-dim: #94a3b8;
+        --input-bg: #0f172a;
+    }
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+    
+    body { /* BUKAN .body! */
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        background-color: var(--bg);
+        color: var(--text);
+        min-height: 100vh; /* GANTI height */
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    /* HEADER PERFECT LAYOUT */
+    header {
+        background: rgba(15, 23, 42, 0.95);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--border);
+        padding: 16px 20px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        position: relative;
+        z-index: 100;
+        flex-shrink: 0;
+    }
+    
+    .header-left {
+        flex: 1; /* FIXED: tambah ; */
+        display: flex;
+        align-items: center;
+    }
+    
+    .brand-title {
+        font-size: 20px;
+        font-weight: 800;
+        letter-spacing: -1px;
+        line-height: 1.1;
+    }
+    
+    .island-container {
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+    }
+    
+    .island {
+        width: 110px;
+        height: 30px;
+        background: var(--card);
+        border-radius: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 10px;
+        font-weight: 700;
+        border: 1px solid var(--border);
+        transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+        white-space: nowrap;
+    }
+    
+    .island-active { 
+        width: 160px; 
+        height: 36px; 
+        border-color: var(--primary); 
+        background: var(--primary); 
+        box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
+    }
+    
+    .beta-badge {
+        font-size: 10px;
+        font-weight: 700;
+        color: var(--text-dim);
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        border: 1px solid var(--border);
+        padding: 4px 12px;
+        border-radius: 9999px;
+        flex-shrink: 0;
+        white-space: nowrap;
+    }
+    
+    /* MAIN & CONTAINER */
+    main { 
+        flex: 1; 
+        display: flex; 
+        align-items: flex-start;
+        justify-content: center; 
+        padding: 16px; 
+    }
+    
+    .container {
+        background: var(--card); 
+        padding: 24px;
+        border-radius: 20px;
+        width: 100%; 
+        max-width: 400px;
+        border: 1px solid var(--border);
+        box-shadow: 0 10px 15px -3px rgba(0,0,0,0.5);
+        display: flex; 
+        flex-direction: column;
+        flex: 1;
+    }
+    
+    .scroll-content { 
+        overflow-y: auto; 
+        padding-right: 4px; 
+        flex: 1;
+        -webkit-overflow-scrolling: touch;
+    }
+    .scroll-content::-webkit-scrollbar { width: 4px; }
+    .scroll-content::-webkit-scrollbar-thumb {
+        background: var(--primary);
+        border-radius: 10px;
+    }
+    
+    /* FORM STYLES */
+    .field { margin-bottom: 24px; }
+    .label-row { display: flex; align-items: center; margin-bottom: 10px; }
+    label { 
+        font-size: 11px; 
+        color: var(--text-dim); 
+        font-weight: 700; 
+        text-transform: uppercase; 
+        letter-spacing: 1px; 
+    }
+    
+    .hint {
+        width: 18px; height: 18px; 
+        background: #334155; color: #fff;
+        border-radius: 50%; font-size: 10px; 
+        margin-left: 8px;
+        display: flex; align-items: center; 
+        justify-content: center; cursor: pointer;
+        font-weight: 800;
+    }
+    
+    input {
+        width: 100%; padding: 16px; 
+        background: var(--input-bg); 
+        border: 2px solid var(--border);
+        border-radius: 12px; font-size: 18px; 
+        font-weight: 600; color: white;
+        outline: none; font-family: 'Plus Jakarta Sans', sans-serif;
+        transition: 0.2s;
+    }
+    
+    input:focus { 
+        border-color: var(--primary); 
+        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+        background: var(--bg);
+    }
+    
+    .btn-calc {
+        width: 100%; padding: 18px; 
+        background: var(--primary); color: white;
+        border: none; border-radius: 16px; 
+        font-size: 14px; font-weight: 800;
+        cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif;
+        transition: 0.3s;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-top: 8px;
+    }
+    
+    .btn-calc:hover {
+        background: #2563eb;
+        transform: translateY(-1px);
+        box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+    }
+    
+    /* RESULTS */
+    .results { margin-top: 30px; display: none; animation: slideUp 0.5s ease-out forwards; }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    
+    .summary-card {
+        background: rgba(45, 55, 72, 0.8); 
+        padding: 24px; border-radius: 24px;
+        border: 1px solid var(--border); 
+        margin-bottom: 20px; text-align: center;
+    }
+    
+    .total-val { font-size: 32px; font-weight: 800; letter-spacing: -1px; margin: 8px 0; color: var(--text); }
+    .row { display: flex; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid #334155; font-size: 13px; }
+    
+    /* MODAL */
+    .overlay { position: fixed; inset: 0; background: rgba(2, 6, 23, 0.95); backdrop-filter: blur(20px); z-index: 9999; display: flex; align-items: center; justify-content: center; opacity: 1; transition: opacity 0.3s ease; }
+    .modal { background: var(--card); padding: 30px; border-radius: 32px; max-width: 400px; width: 85%; border: 1px solid var(--border); box-shadow: 0 25px 50px rgba(0,0,0,0.5); text-align: center; }
+    .modal h2 { font-size: 20px; margin-bottom: 12px; font-weight: 700; background: linear-gradient(90deg, var(--primary), #af52de); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .modal p { color: var(--text-dim); line-height: 1.6; font-size: 14px; margin-bottom: 24px; text-align: left; }
+    .btn-prime { width: 100%; padding: 16px; background: var(--primary); color: white; border: none; border-radius: 16px; font-weight: 800; cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; text-transform: uppercase; letter-spacing: 1px; font-size: 12px; }
+    
+    /* PORTRAIT RESPONSIVE */
+    @media screen and (max-width: 480px) {
+        header { padding: 12px 16px; gap: 12px; }
+        .brand-title { font-size: 18px; }
+        .island { width: 90px; height: 28px; font-size: 9px; }
+        .island-active { width: 130px; }
+        .container { padding: 20px 16px; margin: 8px; }
+        input { padding: 14px; font-size: 16px; }
+        .field { margin-bottom: 20px; }
+    }
+    
+    @media screen and (max-height: 700px) {
+        main { padding: 12px; }
+        .container { padding: 20px 16px; }
+    }
     </style>
 </head>
 <body>
