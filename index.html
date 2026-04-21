@@ -26,9 +26,10 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            position: relative;
         }
 
-        /* Header SIMPEL - tanpa island */
+        /* Header SIMPEL */
         header {
             background: rgba(15, 23, 42, 0.95);
             backdrop-filter: blur(20px);
@@ -94,48 +95,13 @@
             }
         }
 
-        /* Island BARU - di antara header dan kolom */
-        .status-bar {
-            background: rgba(30, 41, 59, 0.8);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--border);
-            padding: 12px 24px;
-            display: flex;
-            justify-content: center;
+        /* Island TRANSPARENT BG - MASUK BODY */
+        .island {
             position: sticky;
             top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
             z-index: 90;
-            flex-shrink: 0;
-        }
-
-        @media (max-width: 768px) {
-            .status-bar {
-                top: 100px;
-                padding: 10px 16px;
-            }
-            
-            .island {
-                width: 100%;
-                max-width: 200px;
-                height: 36px;
-                font-size: 11px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .status-bar {
-                top: 90px;
-                padding: 8px 12px;
-            }
-            
-            .island {
-                height: 32px;
-                font-size: 10px;
-                max-width: 180px;
-            }
-        }
-
-        .island {
             width: 140px;
             height: 36px;
             background: var(--card);
@@ -148,6 +114,8 @@
             font-weight: 700;
             border: 1px solid var(--border);
             transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+            margin: 0 auto;
+            backdrop-filter: blur(12px);
         }
 
         .island-active { 
@@ -158,6 +126,43 @@
             color: white;
             box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
             font-size: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .island {
+                top: 100px;
+                width: 100%;
+                max-width: 200px;
+                height: 36px;
+                font-size: 11px;
+            }
+            
+            .island-active {
+                max-width: 220px;
+                height: 40px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .island {
+                top: 90px;
+                height: 32px;
+                font-size: 10px;
+                max-width: 180px;
+            }
+            
+            .island-active {
+                height: 38px;
+                max-width: 200px;
+                font-size: 11px;
+            }
+        }
+
+        /* Hilang saat scroll ke bawah */
+        .island.hide {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateX(-50%) translateY(-20px);
         }
 
         .overlay {
@@ -234,7 +239,8 @@
             align-items: center; 
             justify-content: center; 
             padding: 24px 20px; 
-            min-height: calc(100vh - 200px);
+            min-height: calc(100vh - 140px);
+            margin-top: 20px;
         }
 
         @media (max-width: 768px) {
@@ -242,7 +248,8 @@
                 padding: 16px 12px;
                 padding-top: 20px;
                 align-items: flex-start;
-                min-height: calc(100vh - 220px);
+                min-height: calc(100vh - 160px);
+                margin-top: 16px;
             }
         }
 
@@ -250,7 +257,8 @@
             main {
                 padding: 12px 8px;
                 padding-top: 16px;
-                min-height: calc(100vh - 210px);
+                min-height: calc(100vh - 150px);
+                margin-top: 12px;
             }
         }
 
@@ -441,10 +449,8 @@
         <div class="beta-badge">Beta Edition</div>
     </header>
 
-    <!-- STATUS BAR BARU - Island di sini! -->
-    <div class="status-bar">
-        <div class="island" id="island">SIAP HITUNG</div>
-    </div>
+    <!-- Island DIRECT di BODY - NO RECTANGLE BG -->
+    <div class="island" id="island">SIAP HITUNG</div>
 
     <main>
         <div class="container">
@@ -482,6 +488,22 @@
     </main>
 
     <script>
+        // Scroll hide/show island
+        let lastScroll = 0;
+        const island = document.getElementById('island');
+        
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            
+            if (currentScroll > lastScroll && currentScroll > 200) {
+                island.classList.add('hide');
+            } else {
+                island.classList.remove('hide');
+            }
+            
+            lastScroll = currentScroll;
+        });
+
         // Global listener untuk Enter
         document.addEventListener('keydown', function(e) { 
             if (e.key === 'Enter') calc(); 
@@ -518,14 +540,17 @@
                 isl.innerText = "CEK INPUT";
                 isl.style.background = "#ef4444";
                 isl.style.color = "white";
-                setTimeout(() => { 
-                    isl.innerText = "SIAP HITUNG"; 
-                    isl.style.background = "var(--card)";
-                    isl.style.color = "white";
+                setTimeout
+                () => { 
+                isl.innerText = "SIAP HITUNG"; 
+                isl.style.background = "var(--card)";
+                isl.style.color = "white";
                 }, 2000);
-                return;
+            return;
             }
 
+            // Show island saat calculate
+            isl.classList.remove('hide');
             isl.classList.add('island-active');
             isl.innerText = "CALCULATING...";
 
